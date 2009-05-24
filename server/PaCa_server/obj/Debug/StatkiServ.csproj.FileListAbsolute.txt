@@ -1,0 +1,5 @@
+C:\Documents and Settings\Ciałek\Moje dokumenty\Visual Studio 2008\Projects\asp_net_nauka\StatkiServ\StatkiServ\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Ciałek\Moje dokumenty\Visual Studio 2008\Projects\asp_net_nauka\StatkiServ\StatkiServ\bin\Debug\StatkiServ.exe
+C:\Documents and Settings\Ciałek\Moje dokumenty\Visual Studio 2008\Projects\asp_net_nauka\StatkiServ\StatkiServ\bin\Debug\StatkiServ.pdb
+C:\Documents and Settings\Ciałek\Moje dokumenty\Visual Studio 2008\Projects\asp_net_nauka\StatkiServ\StatkiServ\obj\Debug\StatkiServ.exe
+C:\Documents and Settings\Ciałek\Moje dokumenty\Visual Studio 2008\Projects\asp_net_nauka\StatkiServ\StatkiServ\obj\Debug\StatkiServ.pdb

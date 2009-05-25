@@ -138,6 +138,12 @@ namespace StatkiServ
             polecenie = pol;
             pozycja = poz;
         }
+        public Polecenia(string pol, int idP,List<Pozycja> poz)
+        {
+            idPolecenia = idP;
+            polecenie = pol;
+            pozycje = poz;
+        }
         public Polecenia(string pol, List<Pozycja> poz)
         {
             polecenie = pol;
@@ -242,7 +248,7 @@ namespace StatkiServ
             if (kodBledu != KodyBledu.nieustawiony)
                 sb.Append(" " + kodBledu.ToString());
             if (pozycja != null)
-                sb.Append(pozycja.ToString());
+                sb.Append(" "+pozycja.ToString());
             int i=0;
             if (pozycje != null)
                 foreach (Pozycja p in pozycje)

@@ -30,12 +30,18 @@ namespace StatkiServ
             Thread th = new Thread(this.sprawdzajPlansze);
             th.Start();
         }
+        delegate void strzalyWpoblizu(Pozycja p);
+        event strzalyWpoblizu strzaly;
         public int Tryb
         {
             get
             {
                 return polecenie.Tryb;
             }
+        }
+        public void usunStatek(Statek st)
+        {
+            statki.Remove(st);
         }
         public string Nazwa
         {
@@ -153,22 +159,25 @@ namespace StatkiServ
             }
             return widoczneStatki;
         }
-        public List<Pozycja> wykonajStrzal(Statek statek, Pozycja pozycja)
+        public List<Pozycja> wykonajStrzal(Statek statek, Pozycja pozycja,int idPolecenia)
         {
+            statek.zatopiono = false;
+            strzaly = null;
             statek.mutexPozycje.WaitOne();
             if (statek.strzalWsiebie(pozycja) || !statek.zasiegStrzalu(pozycja) || !statek.strzalWarunkowy())
                 return null;
             Statek trafionyStatek = strzelWstatek(pozycja);
             List<Pozycja> pozostalePola = new List<Pozycja>();
             bool wygrana = false;
-            if (trafionyStatek != null)
+            Console.WriteLine("______________________");
+            if (trafionyStatek!= null)
             {
+                Console.WriteLine("-------------------");
                 trafionyStatek.mutexPozycje.WaitOne();
-                trafionyStatek.trafionoStatek(pozycja);
+                trafionyStatek.trafionoStatek(pozycja,idPolecenia);
                 if (trafionyStatek.pozycje.Count == 1)
                 {
-
-
+                    statek.zatopiono = true;
                     if (polecenie.Tryb == Tryby.normalny)
                     {
                         trafionyStatek.zatopionoStatek();
@@ -180,15 +189,13 @@ namespace StatkiServ
                     {
                         statek.punkty += 10;
                         if (statek.punkty < polecenie.PktDoZdobycia)
-                            trafionyStatek.odrodzenie(statki,rozmiarPlanszy);
+                            trafionyStatek.odrodzenie(statki, rozmiarPlanszy);
                         else
                             statek.wygrana = wygrana = true;
                     }
-                    trafionyStatek.mutexPozycje.ReleaseMutex();
                 }
                 else
                 {
-
                     Pozycja tmp = trafionyStatek.pozycje.Find(delegate(Pozycja poz) { return poz.x == pozycja.x && poz.y == pozycja.y; });
                     trafionyStatek.pozycje.Remove(tmp);
                     pozostalePola = trafionyStatek.pozycje;
@@ -197,6 +204,7 @@ namespace StatkiServ
                         statek.punkty += 5;
                     }
                 }
+                trafionyStatek.mutexPozycje.ReleaseMutex();
             }
             else pozostalePola.Add(new Pozycja(-1, -1));
             if (klienci.Count == 2 && trafionyStatek != null)
@@ -210,6 +218,8 @@ namespace StatkiServ
                     statkiBlisko(pozostalePola, pozycja, statek);
             }
             statek.mutexPozycje.ReleaseMutex();
+            if (strzaly != null)
+                strzaly(pozycja);
             return pozostalePola;
         }
         public Statek strzelWstatek(Pozycja poz)
@@ -242,22 +252,24 @@ namespace StatkiServ
                     {
                         for (int j = 0; j < 11; j++)
                         {
-                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y + i, rozmiarPlanszy.y))
+                            if (i == 0 && j == 0)
+                                continue;
+                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y + j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y - i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y - j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y - i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y - j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y + i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y + j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
@@ -268,7 +280,7 @@ namespace StatkiServ
                     if (blisko) break;
                 }
                 if (blisko)
-                    st.strzalWpoblizu(poz);
+                    strzaly += st.strzalWpoblizu;
             }
 
         }
@@ -284,22 +296,22 @@ namespace StatkiServ
                     {
                         for (int j = 0; j < 7; j++)
                         {
-                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y + i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y + j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y - i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x + i, rozmiarPlanszy.x) && p.y == modulo(poz.y - j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y - i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y - j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
                             }
-                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y + i, rozmiarPlanszy.y))
+                            if (p.x == modulo(poz.x - i, rozmiarPlanszy.x) && p.y == modulo(poz.y + j, rozmiarPlanszy.y))
                             {
                                 blisko = true;
                                 break;
@@ -310,7 +322,7 @@ namespace StatkiServ
                     if (blisko)
                         widocznePozycje.Add(p);
                 }
-                
+
             }
         }
     }

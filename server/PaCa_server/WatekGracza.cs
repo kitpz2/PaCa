@@ -53,7 +53,7 @@ namespace StatkiServ
                 }
                 List<Pozycja> pozycje = polecenie.Pozycje;
                 pozycje.Sort();
-                foreach (Pozycja p in pozycje) //TODO zamienic bez petli
+                foreach (Pozycja p in pozycje)
                 {
                     if (p.x < 0 || p.x > plansza.rozmiarX - 1 || p.y < 0 || p.y > plansza.rozmiarY - 1)
                     {
@@ -102,8 +102,6 @@ namespace StatkiServ
             PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", idPolecenia));
             th = Thread.CurrentThread;
             plansza.zglosGotowosc(odbierajPolecenia);
-            /* th.Suspend(); //TODO przerobic na mutexy albo semafory
-             odbierajPolecenia();*/
         }
         void odbierajPolecenia()
         {
@@ -137,7 +135,6 @@ namespace StatkiServ
                                     PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, NumerOdpowiedzi.mozliwyRuchStatekWpoblizu, stat));
                                 else
                                     PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, NumerOdpowiedzi.mozliwyRuchBrakStatku, stat));
-                                // Console.Write("Statek " + idKlienta.ToString()+":");
                                 foreach (Pozycja p in statek.pozycje)
                                     Console.Write(" (" + p.x + "," + p.y + ")");
                                 Console.WriteLine("");
@@ -147,20 +144,49 @@ namespace StatkiServ
                         break;
                     case "SHO":
                         plansza.mutexStrzal.WaitOne();
-                        List<Pozycja> strzaly = plansza.wykonajStrzal(statek, polecenie.nPozycja);
+                        List<Pozycja> strzaly = plansza.wykonajStrzal(statek, polecenie.nPozycja, polecenie.IdPolecenie);
                         if (strzaly == null)
                             PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("NO", KodyBledu.niemozliwyStrzal));
                         else
                         {
-                            //TODO wyslac info
+                            if (strzaly[0] == new Pozycja(-1, -1))
+                            {
+                                if (strzaly.Count == 1)
+                                {
+                                    PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, polecenie.IdPolecenie, IdOdpowiedzi.chybionyStrzal));
+                                }
+
+                                else
+                                {
+                                    List<Pozycja> tmp = new List<Pozycja>();
+                                    for (int i = 1; i < strzaly.Count; i++)
+                                        tmp.Add(strzaly[i]);
+                                    PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, IdOdpowiedzi.pudloBliskoStatku, tmp));
+                                }
+                            }
+                            else
+                            {
+                                PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, statek.zatopiono ? IdOdpowiedzi.zatopiony : IdOdpowiedzi.trafiony, strzaly));
+                            }
+                            statek.aktualizujCzasStrzalu();
+
                         }
                         plansza.mutexStrzal.ReleaseMutex();
                         break;
-                    case "PTS": break;//TODO wyslij punkty
-                    case "GET": break;//TODO wyslij wspolrzedne
-                    default: break;//TODO wyslij, ze bledne polecenie
+                    case "PTS":
+                        PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, statek.punkty, 1));
+                        break;
+                    case "GET":
+                        statek.mutexPozycje.WaitOne();
+                        PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("OK", polecenie.IdPolecenie, statek.pozycje));
+                        statek.mutexPozycje.ReleaseMutex();
+                        break;
+                    default:
+                        PoleceniaSieciowe.wyslijPolecenie(stream, new Polecenia("NO", KodyBledu.blednePolecenie));
+                        break;
                 }
             }
+            plansza.usunStatek(statek);
             plansza.klienci.Remove(Thread.CurrentThread);
         }
     }

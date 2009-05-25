@@ -11,6 +11,7 @@ namespace StatkiServ
         List<Pozycja> pPelnePozycje;
         NetworkStream pStream;
         int id;
+        public bool zatopiono = false;
         public int punkty = 0;
         public bool dodano = false;
         DateTime czasRuchu = new DateTime(1, 1, 1);
@@ -23,6 +24,7 @@ namespace StatkiServ
         {
             pPozycje = pozycje;
             pPelnePozycje = new List<Pozycja>();
+            mutexPozycje = new Mutex();
             foreach (Pozycja p in pozycje)
                 pPelnePozycje.Add(new Pozycja(p.x, p.y));
             pStream = stream;
@@ -30,6 +32,12 @@ namespace StatkiServ
         }
         public static bool operator ==(Statek st1, Statek st2)
         {
+            if (object.ReferenceEquals(st1, null) && object.ReferenceEquals(st2, null))
+                return true;
+            if (object.ReferenceEquals(st1, null))
+                return false;
+            if (object.ReferenceEquals(st2, null))
+                return false;
             foreach (Pozycja p1 in st1.pPozycje)
                 foreach (Pozycja p2 in st2.pPozycje)
                     if (p1 == p2) return true;
@@ -39,6 +47,7 @@ namespace StatkiServ
         {
             return !(st1 == st2);
         }
+
         public override bool Equals(object obj)
         {
             return obj is Statek && (Statek)obj == this;
@@ -96,8 +105,8 @@ namespace StatkiServ
                         return (modulo((p.y - 1), rozmiar.y) == pp.y && (p.x == pp.x));
                     if (kierunek == Kierunki.prawo)
                     {
-                        if(modulo((p.x + 1), rozmiar.x) == pp.x && (p.y == pp.y))
-                            Console.WriteLine("1. "+p.ToString()+"2. "+pp.ToString());
+                        if (modulo((p.x + 1), rozmiar.x) == pp.x && (p.y == pp.y))
+                            Console.WriteLine("1. " + p.ToString() + "2. " + pp.ToString());
                         return (modulo((p.x + 1), rozmiar.x) == pp.x && (p.y == pp.y));
                     }
                     if (kierunek == Kierunki.lewo)
@@ -189,7 +198,7 @@ namespace StatkiServ
             czasRuchu = DateTime.Now;
         }
 
-        public bool kolizja(List<Statek> statki,Pozycja poz)
+        public bool kolizja(List<Statek> statki, Pozycja poz)
         {
             foreach (Statek s in statki)
             {
@@ -210,39 +219,46 @@ namespace StatkiServ
             return false;
         }
 
-        public void trafionoStatek(Pozycja pozycja) { } //TODO wyslac info, ze trafiono statek
-        public void strzalWpoblizu(Pozycja pozycja) {
+        public void trafionoStatek(Pozycja pozycja, int idPolecenia)
+        {
+            PoleceniaSieciowe.wyslijPolecenie(pStream, new Polecenia("TRAF", idPolecenia, pozycja));
+        }
+        public void strzalWpoblizu(Pozycja pozycja)
+        {
             PoleceniaSieciowe.wyslijPolecenie(pStream, new Polecenia("CLS", pozycja));
-        
-        } //TODO wyslac info,ze strzelono w poblizu
-        public void zatopionoStatek() {
+        }
+
+        public void zatopionoStatek()
+        {
             PoleceniaSieciowe.wyslijPolecenie(pStream, new Polecenia("LOSE"));
         }
-        public void wygranaWyslij() {
+        public void wygranaWyslij()
+        {
             PoleceniaSieciowe.wyslijPolecenie(pStream, new Polecenia("WIN"));
-        } //TODO wyslac info, ze wygrales
-        public void odrodzenie(List<Statek> statki,Rozmiar rozmiar)
+        }
+        public void odrodzenie(List<Statek> statki, Rozmiar rozmiar)
         {
             pozycje.RemoveAll(delegate(Pozycja p) { return true; });
             Random rand = new Random(DateTime.Now.Millisecond);
-                int x = rand.Next() % rozmiar.x;
-                int y = rand.Next() % rozmiar.y;
+            int x = rand.Next() % rozmiar.x;
+            int y = rand.Next() % rozmiar.y;
             while (true)
             {
-                 x = rand.Next() % rozmiar.x;
+                x = rand.Next() % rozmiar.x;
                 y = rand.Next() % rozmiar.y;
                 Pozycja poz = new Pozycja(x, y);
-                if (kolizja(statki,poz)) continue;
+                if (kolizja(statki, poz)) continue;
                 break;
             }
-            List<Pozycja> lista=new List<Pozycja>();
+            List<Pozycja> lista = new List<Pozycja>();
             pozycje.Add(new Pozycja(x, y));
-            pozycje.Add(new Pozycja(x, y+1));
-            pozycje.Add(new Pozycja(x+1, y));
-            pozycje.Add(new Pozycja(x+1, y+1));
+            pozycje.Add(new Pozycja(x, y + 1));
+            pozycje.Add(new Pozycja(x + 1, y));
+            pozycje.Add(new Pozycja(x + 1, y + 1));
         }
 
-        public void aktualizujCzasStrzalu() {
+        public void aktualizujCzasStrzalu()
+        {
             czasStrzalu = DateTime.Now;
         }
         public bool strzalWsiebie(Pozycja poz)

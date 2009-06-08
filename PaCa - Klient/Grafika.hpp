@@ -19,6 +19,7 @@ public:
     void Rysuj(int x, int y, SDL_Surface* obraz);
     void Petla_rysowania();
     void Start();
+    void licz_fps();
 
 protected:
 private:
@@ -42,6 +43,7 @@ private:
     SDL_Surface *przeciwnik;
     SDL_Surface *widmo;
     SDL_Surface *wrak;
+    //SDL_Surface *wrog;
     SDL_Event event;
 
     Gracz player;

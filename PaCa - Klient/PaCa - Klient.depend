@@ -183,14 +183,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1244420622 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.cpp
+1244482368 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.cpp
 	"Grafika.hpp"
 	<cstdlib>
 	<cstdio>
 	"version.h"
 	<iostream>
 
-1244413367 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.hpp
+1244476483 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.hpp
 	<list>
 	"globals.h"
 	"Pole.h"
@@ -200,20 +200,21 @@
 	"gracz.hpp"
 	"net.hpp"
 
-1244388610 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.h
+1244482769 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.h
 	"SDL/SDL.h"
 	"SDL/SDL_image.h"
 	"debug.hpp"
+	<unistd.h>
 
 1243292567 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/element_rysowania.hpp
 	"globals.h"
 
 1243289927 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/version.h
 
-1244406504 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Pole.cpp
+1244473353 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Pole.cpp
 	"Pole.h"
 
-1244408017 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Pole.h
+1244462438 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Pole.h
 	"globals.h"
 	<iostream>
 
@@ -223,7 +224,7 @@
 1243266543 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.cpp
 	"globals.h"
 
-1244413367 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/main.cpp
+1244482845 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/main.cpp
 	<cstdlib>
 	<SDL.h>
 	"Pole.h"
@@ -234,7 +235,7 @@
 
 1244372176 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/gracz.cpp
 
-1244420687 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.hpp
+1244477239 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.hpp
 	<boost/asio.hpp>
 	<boost/thread/thread.hpp>
 	<boost/bind.hpp>
@@ -242,14 +243,15 @@
 	"gracz.hpp"
 	<list>
 	"debug.hpp"
+	"globals.h"
 
-1244396780 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/gracz.hpp
+1244482185 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/gracz.hpp
 
 1244388806 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/debug.hpp
 	<cstdio>
 	<cstdlib>
 
-1244420622 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.cpp
+1244477239 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.cpp
 	"net.hpp"
 	<cstdlib>
 	<cstdio>

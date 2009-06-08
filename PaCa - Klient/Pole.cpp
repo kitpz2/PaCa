@@ -61,5 +61,6 @@ int Pole::handle_events(SDL_Event& event, int przesuniecie_x, int przesuniecie_y
             }
         }
     }
+    return 0;
 
 }

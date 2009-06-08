@@ -10,7 +10,7 @@ bool Net::Send(string dane)
     }
     catch (exception &e)
     {
-        cout<<"Wystąpił błąd wysyłania danych! e.what()"<<endl;
+        cout<<"Wystąpił błąd wysyłania danych! "<<e.what()<<endl;
         exit(2);
     }
     return true;
@@ -73,6 +73,36 @@ bool Net::NowaGra(std::string nazwa_gry, int plansza_x, int plansza_y,\
 
     return true;
 }
+
+bool Net::NowaGra(std::string nazwa_gry, int plansza_x, int plansza_y,\
+                  char tryb_gry, int max_graczy, int max_punktow)
+{
+    char buf[128];
+    //int pol_tmp=losuj_id_polecenia(1);
+
+    sprintf(buf,"CRE %s %d %d %d %d %s %d#",nazwa_gry.c_str(),plansza_x, plansza_y,tryb_gry,max_graczy,"0.5",max_punktow);
+    /*oczekujace.lock();
+    polecenia_oczekujace.push_back(string(buf));
+    oczekujace.unlock();*/
+    Send(string(buf));
+    string temp=Odbierz();
+    string t1=temp.substr(0,2);
+    info(t1.c_str());
+    if (t1.compare("OK")==0)
+    {
+        size_t p1=0,p2=0;
+        p1=temp.find(' ',p2)+1;
+        p2=temp.find(' ',p1);
+        t1=temp.substr(p1,p2);
+        info(t1.c_str());
+        id_klienta = atoi(t1.c_str());
+    }
+    else
+        return false;
+
+    return true;
+}
+
 bool Net::Dolacz(std::string nazwa_gry)
 {
     char buf[128];
@@ -146,6 +176,7 @@ void Net::Odbieracz()
 {
     while (true)
     {
+        usleep(PAUSE_TIME);
         oczekujace.lock();
         if (!polecenia_oczekujace.empty())
         {
@@ -187,8 +218,12 @@ void Net::Odbieracz()
                     if (nr_odpowiedzi==301)
                     {
                         list<Pozycja> pozycje;
+                        temp[temp.size()-1]=' ';
+                        //size_t p1=0,p2=0;
+                        int i=0;
                         while (p2!=string::npos)
                         {
+                            ++i;
                             p1=temp.find(' ',p2)+1;
                             p2=temp.find(' ',p1);
                             t1=temp.substr(p1,p2);
@@ -201,11 +236,21 @@ void Net::Odbieracz()
                             info(t1.c_str());
                             int y = atoi(t1.c_str());
                             pozycje.push_back(Pozycja(x,y));
+#ifdef DEBUG
+                            char tmp[128];
+                            sprintf(tmp,"dodane: x=%d y=%d",x,y);
+                            info(tmp);
+
+#endif//DEBUG
+                            if (i>16)
+                                break;
+
                         }
                         odebrane.lock();
                         wyniki_zapytan.push_back(OdebranyWynikPolecenia(1,301,0,0,pozycje));
                         odebrane.unlock();
                     }
+
 
 
                 }
@@ -304,8 +349,86 @@ void Net::Odbieracz()
                 p2=temp.find(' ',p1);
                 t1=temp.substr(p1,p2);
                 info(t1.c_str());
+                int x = atoi(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+                int y = atoi(t1.c_str());
+
+                /*p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());*/
+
+
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(8,0,x,y));
+                odebrane.unlock();
+#ifdef DEBUG
+                char tmp[128];
+                sprintf(tmp,"dodane: x=%d y=%d",x,y);
+                info(tmp);
+
+#endif//DEBUG
+
+
+            }
+            else if (t1.compare("TRAF")==0)
+            {
+                size_t p1=0,p2=0;
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+                int x = atoi(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+                int y = atoi(t1.c_str());
+
+                /*p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());*/
+
+
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(3,0,x,y));
+                odebrane.unlock();
+#ifdef DEBUG
+                char tmp[128];
+                sprintf(tmp,"dodane: x=%d y=%d",x,y);
+                info(tmp);
+
+#endif//DEBUG
+
+
+            }
+            else if (t1.substr(0,t1.size()-1).compare("WIN")==0)
+            {
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(100));
+                odebrane.unlock();
+            }
+            else if (t1.substr(0,t1.size()-1).compare("LOSE")==0)
+            {
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(101));
+                odebrane.unlock();
+            }
+            else if (t1.compare("NES")==0)
+            {
+                list<Pozycja> pozycje;
+                temp[temp.size()-1]=' ';
+                size_t p1=0,p2=0;
+                int i=0;
                 while (p2!=string::npos)
                 {
+                    ++i;
                     p1=temp.find(' ',p2)+1;
                     p2=temp.find(' ',p1);
                     t1=temp.substr(p1,p2);
@@ -316,20 +439,21 @@ void Net::Odbieracz()
                     p2=temp.find(' ',p1);
                     t1=temp.substr(p1,p2);
                     info(t1.c_str());
-
                     int y = atoi(t1.c_str());
-                    odebrane.lock();
-                    wyniki_zapytan.push_back(OdebranyWynikPolecenia(8,x,y));
-                    odebrane.unlock();
+                    pozycje.push_back(Pozycja(x,y));
 #ifdef DEBUG
                     char tmp[128];
                     sprintf(tmp,"dodane: x=%d y=%d",x,y);
                     info(tmp);
 
 #endif//DEBUG
+                    if (i>16)
+                        break;
 
                 }
-
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(9,0,0,0,pozycje));
+                odebrane.unlock();
             }
         }
 

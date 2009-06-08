@@ -23,7 +23,7 @@ int main ( int argc, char** argv )
     if (string(argv[1]).compare("create")==0)
     {
         sprintf(buf,"%s",argv[2]);
-        if (!server.NowaGra(string(buf),MAPA_X,MAPA_Y,0,10))
+        if (!server.NowaGra(string(buf),MAPA_X,MAPA_Y,1,5,10000))
         {
             cout<<"Serwer odmawia utworzenia gry"<<endl;
             exit(0);
@@ -38,7 +38,7 @@ int main ( int argc, char** argv )
             exit(0);
         }
     }
-    Grafika grafika(640,480,32,&server);
+    Grafika grafika(800,600,32,&server);
     grafika.Start();
 
     return 0;

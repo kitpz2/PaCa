@@ -8,6 +8,7 @@
 #include "gracz.hpp"
 #include <list>
 #include "debug.hpp"
+#include "globals.h"
 using namespace std;
 using boost::asio::ip::tcp;
 //using namespace boost::asio;
@@ -20,14 +21,17 @@ public:
     polecenia:
     1 - przesuniece gracza
     2 - strzal
-    3 - nowa gra
+    3 - statek gracza zostal trafiony
     4 - lista gier
     5 - punktacja
     6 - ustawienie gracza
     7 - prosba o pozycje gracza
     8 - wrogi strzal w poblizu
+    9 - inny gracz w poblizu
     10 - błąd
     11 - Start
+    100 - zwycęstwo
+    101 - przegrana
     */
     int polecenie;
     int kod_bledu;
@@ -113,6 +117,8 @@ public:
     bool Strzal(int x, int y);
     bool NowaGra(std::string nazwa_gry, int plansza_x, int plansza_y,\
                  char tryb_gry, int max_graczy);
+    bool NowaGra(std::string nazwa_gry, int plansza_x, int plansza_y,\
+                 char tryb_gry, int max_graczy, int max_punktow);
     bool Dolacz(std::string nazwa_gry);
     bool Lista();
     bool SET(int x, int y);

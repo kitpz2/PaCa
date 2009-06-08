@@ -70,6 +70,18 @@ Grafika::~Grafika()
     //dtor
 }
 
+void Grafika::licz_fps()
+{
+    while (true)
+    {
+        fps_muteks.lock();
+        cout<<fps<<endl;
+        fps=0;
+        fps_muteks.unlock();
+        sleep(1);
+    }
+}
+
 void Grafika::Petla_rysowania()
 {
     //cout<<"Petla rysowania"<<endl;
@@ -87,7 +99,7 @@ void Grafika::Petla_rysowania()
             if (kolejka_rysowania.empty())
             {
                 kolejka_muteks.unlock();
-
+                usleep(PAUSE_TIME);
                 continue;
             }
             tmp=kolejka_rysowania.front();
@@ -172,15 +184,25 @@ SDL_Surface *Grafika::load_image( std::string nazwa )
 
 void Grafika::Start()
 {
+    int max_x=pola_x+poz_x;
+    int max_y=pola_y+poz_y;
+    //cout<<poz_x<<" "<<poz_y<<"---"<<max_x<<" "<<max_y<<endl;
+    if (max_x>=MAPA_X)
+        max_x=MAPA_X;
+    if (max_y>=MAPA_Y)
+        max_y=MAPA_Y;
     lewy=prawy=gora=dol=czekamy=false;
     //server->SET(gx,gy);
     boost::thread rysowanie(boost::bind(&Grafika::Petla_rysowania,this));
+    boost::thread liczenie_fps(boost::bind(&Grafika::licz_fps,this));
+
     boost::thread odbieranie(boost::bind(&Net::Odbieracz,server));
     dzialaj_muteks.lock();
     int gx,gy;
     while (dzialaj)
     {
         dzialaj_muteks.unlock();
+        usleep(PAUSE_TIME);
         while (!server->WynikiEmpty())
         {
             OdebranyWynikPolecenia wynik=server->GetOdebrane();
@@ -191,9 +213,10 @@ void Grafika::Start()
             }
             if (wynik.polecenie==1 && wynik.ok==true)
             {
+                info("Przesuwam gracza");
                 int nx=player.GetX();
                 int ny=player.GetY();
-                czekamy=false;
+                //czekamy=false;
                 if (gora==true)
                     player.Set(nx,ny-1);
                 else if (dol==true)
@@ -202,9 +225,11 @@ void Grafika::Start()
                     player.Set(nx-1,ny);
                 else if (prawy==true)
                     player.Set(nx+1,ny);
-                gora=dol=lewy=prawy=false;
+                gora=dol=lewy=prawy=czekamy=false;
                 wysrodkuj_mape();
-                //line;
+                char tmp[128];
+                sprintf(tmp,"Gracz jest na x= %d y= %d",player.GetX(),player.GetY());
+                info(tmp);
 
             }
             else if (wynik.polecenie==10)
@@ -255,25 +280,62 @@ void Grafika::Start()
             {
                 //line;
                 char tmp[128];
-                sprintf(tmp,"strzelono na pozycje x: %s y %d",wynik.x, wynik.y);
+                sprintf(tmp,"strzelono obok na pozycje x: %d y %d",wynik.x, wynik.y);
                 info(tmp);
                 mapa[wynik.x][wynik.y].Set(3);
+                line;
+            }
+            if (wynik.polecenie==9 || (wynik.polecenie==1 && wynik.id_odpowiedzi==301))
+            {
+                for (int i=poz_y;i<pola_y+poz_y;++i)
+                {
+                    for (int j=poz_x;j<pola_x+poz_x;++j)
+                    {
+                        if (mapa[j][i].Get()==9)
+                        {
+                            mapa[j][i].Set(0);
+                        }
+                    }
+                }
+                while (!wynik.pozycje.empty())
+                {
+                    line;
+                    int tmpx, tmpy;
+                    line;
+                    tmpx=wynik.pozycje.front().x;
+                    line;
+                    tmpy=wynik.pozycje.front().y;
+                    line;
+                    wynik.pozycje.pop_front();
+                    line;
+                    char tm[128];
+                    sprintf(tm,"Ustawiam x=%d y=%d na %d",tmpx,tmpy,9);
+                    info(tm);
+                    if (tmpx==0 && tmpy==0)
+                        continue;
+                    if (tmpx>=MAPA_X || tmpy>=MAPA_Y)
+                        continue;
+                    mapa[tmpx][tmpy].Set(9);
+                    line;
+                }
+            }
+            else if (wynik.polecenie==100)
+            {
+                cout<<"Brawo, wygrałeś"<<endl;
+                exit(0);
+            }
+            else if (wynik.polecenie==101)
+            {
+                cout<<"Niestety, zostałeś zniszcozny...\nSpróbuj ponownie"<<endl;
+                exit(0);
             }
             //line;
         }
-
-        int max_x=pola_x+poz_x;
-        int max_y=pola_y+poz_y;
-        //cout<<poz_x<<" "<<poz_y<<"---"<<max_x<<" "<<max_y<<endl;
-        if (max_x>=MAPA_X)
-            max_x=MAPA_X;
-        if (max_y>=MAPA_Y)
-            max_y=MAPA_Y;
         SDL_Surface *bitmapa;
         //line;
-        for (int i=poz_y;i<pola_y+poz_y;++i)
+        for (int i=poz_y;i<=pola_y+poz_y;++i)
         {
-            for (int j=poz_x;j<pola_x+poz_x;++j)
+            for (int j=poz_x;j<=pola_x+poz_x;++j)
             {
                 char tmp=mapa[j][i].Get();
                 if (tmp==0)
@@ -288,11 +350,18 @@ void Grafika::Start()
                     bitmapa=przeciwnik;
                 else if (tmp==6)
                     bitmapa=wrak;
+                else if (tmp==9)
+                    bitmapa=przeciwnik;
                 Rysuj(j-poz_x,i-poz_y,bitmapa);
             }
         }
         //line;
-        Rysuj(player.GetX()-poz_x,player.GetY()-poz_y,gracz);
+        //Rysuj(player.GetX()-poz_x,player.GetY()-poz_y,gracz);
+        for (int i=0;i<4;++i)
+        {
+            if (player.stan[i])
+                Rysuj(player.pozx[i]-poz_x,player.pozy[i]-poz_y,gracz);
+        }
         Rysuj(0,0,NULL);
         while ( SDL_PollEvent( &event ) )
         {
@@ -332,12 +401,13 @@ void Grafika::Start()
                     if (gra_wystartowala)
                     {
                         server->PrzesunGracza(1);
-                        //gora=true;
-                        //lewy=prawy=dol=false;
+                        gora=true;
+                        lewy=prawy=dol=false;
                     }
                     else
                     {
                         --poz_y;
+
                     }
                 }
                 else if ( event.key.keysym.sym==SDLK_DOWN)
@@ -346,8 +416,8 @@ void Grafika::Start()
                     if (gra_wystartowala)
                     {
                         server->PrzesunGracza(3);
-                        //dol=true;
-                        //gora=lewy=prawy=false;
+                        dol=true;
+                        gora=lewy=prawy=false;
                     }
                     else
                     {
@@ -360,8 +430,8 @@ void Grafika::Start()
                     if (gra_wystartowala)
                     {
                         server->PrzesunGracza(4);
-                        //lewy=true;
-                        //gora=dol=prawy=false;
+                        lewy=true;
+                        gora=dol=prawy=false;
                     }
                     else
                     {
@@ -374,14 +444,22 @@ void Grafika::Start()
                     if (gra_wystartowala)
                     {
                         server->PrzesunGracza(2);
-                        //prawy=true;
-                        //gora=dol=lewy=false;
+                        prawy=true;
+                        gora=dol=lewy=false;
                     }
                     else
                     {
                         ++poz_x;
                     }
                 }
+                if (poz_y<0)
+                    poz_y=0;
+                else if (poz_y>=MAPA_Y)
+                    poz_y=MAPA_Y-1;
+                else if (poz_x<0)
+                    poz_x=0;
+                else if (poz_x>=MAPA_X)
+                    poz_x=MAPA_X-1;
 
             }
             else if ( event.type == SDL_QUIT )  //Quit the program quit = true; }
@@ -397,12 +475,15 @@ void Grafika::Start()
         while (oczekujace_klatki>2)
         {
             klatki_muteks.unlock();
-            for (int i=0;i<10;++i);
+            usleep(PAUSE_TIME);
             klatki_muteks.lock();
             continue;
         }
         klatki_muteks.unlock();
         dzialaj_muteks.lock();
+        fps_muteks.lock();
+        ++fps;
+        fps_muteks.unlock();
     }
     dzialaj_muteks.unlock();
 }

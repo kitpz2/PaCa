@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="Grafika.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="4700" topLine="189" />
+	</File>
+	<File name="Grafika.hpp" open="1" top="0" tabpos="3">
+		<Cursor position="681" topLine="15" />
+	</File>
+	<File name="Pole.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="211" topLine="1" />
+	</File>
+	<File name="Pole.h" open="1" top="0" tabpos="5">
+		<Cursor position="53" topLine="0" />
+	</File>
+	<File name="element_rysowania.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="74" topLine="0" />
+	</File>
+	<File name="element_rysowania.hpp" open="1" top="0" tabpos="9">
+		<Cursor position="173" topLine="1" />
+	</File>
+	<File name="globals.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="globals.h" open="1" top="0" tabpos="8">
+		<Cursor position="127" topLine="0" />
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="189" topLine="0" />
+	</File>
+	<File name="net.cpp" open="1" top="0" tabpos="11">
+		<Cursor position="9962" topLine="310" />
+	</File>
+	<File name="net.hpp" open="1" top="0" tabpos="12">
+		<Cursor position="3530" topLine="126" />
+	</File>
+	<File name="version.h" open="1" top="0" tabpos="10">
+		<Cursor position="678" topLine="5" />
+	</File>
+</CodeBlocks_layout_file>

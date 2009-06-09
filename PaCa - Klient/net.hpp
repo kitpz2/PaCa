@@ -77,6 +77,9 @@ private:
     boost::mutex oczekujace;
     boost::mutex odebrane;
     boost::mutex numery;
+
+    int mapa_x, mapa_y;
+
     int id_polecen[1024];
     int losuj_id_polecenia(int polecenie)
     {
@@ -111,7 +114,8 @@ public:
             id_polecen[i]=-1;
         }
     }
-
+    int GetMapaX(){return mapa_x;};
+    int GetMapaY(){return mapa_y;};
     bool Send(string dane);
     bool PrzesunGracza(char kierunek);
     bool Strzal(int x, int y);

@@ -9,21 +9,27 @@
 #include <boost/thread/mutex.hpp>
 #include "gracz.hpp"
 #include "net.hpp"
+#include "SDL/SDL_ttf.h"
 class Grafika
 {
 public:
     /** Default constructor */
-    Grafika(int x, int y, int bpp,Net *nerver);
+    Grafika(int x, int y, int bpp,Net *nerver, int nMAPA_X, int nMAPA_Y, int ngra);
     /** Default destructor */
     ~Grafika();
     void Rysuj(int x, int y, SDL_Surface* obraz);
     void Petla_rysowania();
     void Start();
     void licz_fps();
+    void Informacja(string i);
 
 protected:
 private:
+    int MAPA_X, MAPA_Y;
+    int gra;
     Net *server;
+    list <SDL_Surface*> informacje;
+    int liczba_informacji;
     SDL_Surface *screen;
     SDL_Surface *load_image(std::string nazwa);
     std::list<element_rysowania> kolejka_rysowania;
@@ -43,6 +49,10 @@ private:
     SDL_Surface *przeciwnik;
     SDL_Surface *widmo;
     SDL_Surface *wrak;
+
+    SDL_Surface *text_pozycja, *text_fps, *text_punkty;
+    TTF_Font *font;
+    SDL_Color textColor;
     //SDL_Surface *wrog;
     SDL_Event event;
 
@@ -50,6 +60,7 @@ private:
     int oczekujace_klatki;
     int time_old;
     int fps;
+    int x,y;
     bool lewy,prawy,gora,dol;
     bool czekamy, strzal_czekamy;
     bool gra_wystartowala;
@@ -79,6 +90,7 @@ private:
         poz_x=nprzesx;
         poz_y=nprzesy;
     }
+    void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
 
     Pole **mapa;
 };

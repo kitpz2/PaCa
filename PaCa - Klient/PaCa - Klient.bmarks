@@ -1,42 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <BrowseTracker_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="Grafika.cpp" open="1" top="1" tabpos="10">
-		<Cursor position="2603" topLine="102" />
+	<File name="Grafika.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="7470" topLine="255" />
 		<BrowseMarks positions="" />
 		<Book_Marks positions="" />
 	</File>
-	<File name="Grafika.hpp" open="1" top="0" tabpos="11">
+	<File name="Grafika.hpp" open="1" top="0" tabpos="3">
 		<Cursor position="681" topLine="15" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="Pole.cpp" open="1" top="0" tabpos="12">
+	<File name="Pole.cpp" open="1" top="0" tabpos="4">
 		<Cursor position="211" topLine="1" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="Pole.h" open="1" top="0" tabpos="13">
+	<File name="Pole.h" open="1" top="0" tabpos="5">
 		<Cursor position="53" topLine="0" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="element_rysowania.cpp" open="1" top="0" tabpos="14">
+	<File name="debug.hpp" open="1" top="0" tabpos="0">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="element_rysowania.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="74" topLine="0" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="element_rysowania.hpp" open="1" top="0" tabpos="17">
+	<File name="element_rysowania.hpp" open="0" top="0" tabpos="9">
 		<Cursor position="173" topLine="1" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="globals.cpp" open="1" top="0" tabpos="15">
+	<File name="globals.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="22" topLine="0" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
+	</File>
+	<File name="globals.h" open="1" top="0" tabpos="8">
+		<Cursor position="147" topLine="0" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
+	</File>
+	<File name="gracz.cpp" open="1" top="0" tabpos="0">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="globals.h" open="1" top="0" tabpos="16">
-		<Cursor position="127" topLine="0" />
+	<File name="gracz.hpp" open="1" top="0" tabpos="0">
+		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="9">
+	<File name="main.cpp" open="1" top="1" tabpos="1">
 		<Cursor position="189" topLine="0" />
+		<BrowseMarks positions="3620,2707,4104" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="net.cpp" open="1" top="0" tabpos="0">
-		<Cursor position="0" topLine="0" />
+	<File name="net.cpp" open="1" top="0" tabpos="11">
+		<Cursor position="9962" topLine="310" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="3087" />
 	</File>
-	<File name="net.hpp" open="1" top="0" tabpos="0">
-		<Cursor position="0" topLine="0" />
+	<File name="net.hpp" open="1" top="0" tabpos="12">
+		<Cursor position="3530" topLine="126" />
+		<BrowseMarks positions="1578" />
+		<Book_Marks positions="" />
 	</File>
-	<File name="version.h" open="1" top="0" tabpos="18">
+	<File name="version.h" open="0" top="0" tabpos="10">
 		<Cursor position="678" topLine="5" />
+		<BrowseMarks positions="" />
+		<Book_Marks positions="" />
 	</File>
 </BrowseTracker_layout_file>

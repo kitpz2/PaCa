@@ -26,7 +26,10 @@ public:
     int pozy[4];
     /**Przechowuje informacje o stanie danego kwadratu gracza*/
     bool stan[4];
-
+    /**
+    Kostruktor gracza
+    \param x Pozycja x gracza
+    \param y Pozycja y gracza*/
     Gracz(int x=0, int y=0):x(x),y(y)
     {
         stan[0]=stan[1]=stan[2]=stan[3]=true;

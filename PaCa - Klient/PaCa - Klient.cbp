@@ -39,6 +39,8 @@
 			<Add option="-lSDL_image" />
 			<Add option="-lboost_thread-mt" />
 			<Add option="-lboost_system-mt" />
+			<Add option="-lfreetype" />
+			<Add option="-lSDL_ttf" />
 		</Linker>
 		<Unit filename="Grafika.cpp" />
 		<Unit filename="Grafika.hpp" />

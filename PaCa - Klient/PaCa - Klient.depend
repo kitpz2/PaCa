@@ -183,14 +183,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1244482368 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.cpp
+1244508523 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.cpp
 	"Grafika.hpp"
 	<cstdlib>
 	<cstdio>
 	"version.h"
 	<iostream>
 
-1244476483 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.hpp
+1244506997 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/Grafika.hpp
 	<list>
 	"globals.h"
 	"Pole.h"
@@ -199,8 +199,9 @@
 	<boost/thread/mutex.hpp>
 	"gracz.hpp"
 	"net.hpp"
+	"SDL/SDL_ttf.h"
 
-1244482769 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.h
+1244537438 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.h
 	"SDL/SDL.h"
 	"SDL/SDL_image.h"
 	"debug.hpp"
@@ -224,7 +225,7 @@
 1243266543 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/globals.cpp
 	"globals.h"
 
-1244482845 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/main.cpp
+1244507674 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/main.cpp
 	<cstdlib>
 	<SDL.h>
 	"Pole.h"
@@ -235,7 +236,7 @@
 
 1244372176 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/gracz.cpp
 
-1244477239 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.hpp
+1244508524 /home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.hpp
 	<boost/asio.hpp>
 	<boost/thread/thread.hpp>
 	<boost/bind.hpp>
@@ -251,7 +252,7 @@
 	<cstdio>
 	<cstdlib>
 
-1244477239 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.cpp
+1244508524 source:/home/pawel/Dokumenty/Uczelnia/PAP/PaCa/PaCa - Klient/net.cpp
 	"net.hpp"
 	<cstdlib>
 	<cstdio>

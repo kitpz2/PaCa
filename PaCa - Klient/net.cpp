@@ -120,6 +120,27 @@ bool Net::Dolacz(std::string nazwa_gry)
         info(t1.c_str());
         id_klienta = atoi(t1.c_str());
         cout<<"Dolacozno"<<endl;
+
+        p1=temp.find(' ',p2)+1;
+        p2=temp.find(' ',p1);
+        t1=temp.substr(p1,p2);
+        info(t1.c_str());
+
+        p1=temp.find(' ',p2)+1;
+        p2=temp.find(' ',p1);
+        t1=temp.substr(p1,p2);
+        info(t1.c_str());
+        mapa_x = atoi(t1.c_str());
+
+        p1=temp.find(' ',p2)+1;
+        p2=temp.find(' ',p1);
+        t1=temp.substr(p1,p2);
+        info(t1.c_str());
+        mapa_y = atoi(t1.c_str());
+        char tmp[128];
+        sprintf(tmp,"mapa ma wielkosc: %dx%d",mapa_x,mapa_y);
+        info(tmp);
+        line;
         return true;
     }
     else
@@ -322,10 +343,58 @@ void Net::Odbieracz()
                     }
 
                 }
+                else if (polecenie==5)
+                {
+
+                    /*p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());*/
+
+                    p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());
+                    int x = atoi(t1.c_str());
+
+                    p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());
+                    int y = atoi(t1.c_str());
+
+                    odebrane.lock();
+                    wyniki_zapytan.push_back(OdebranyWynikPolecenia(5,0,x,y));
+                    odebrane.unlock();
+                }
                 else if (polecenie==6)
                 {
                     odebrane.lock();
                     wyniki_zapytan.push_back(OdebranyWynikPolecenia(6,0));
+                    odebrane.unlock();
+                }
+                else if (polecenie==7)
+                {
+
+                    /*p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());*/
+
+                    p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());
+                    int x = atoi(t1.c_str());
+
+                    p1=temp.find(' ',p2)+1;
+                    p2=temp.find(' ',p1);
+                    t1=temp.substr(p1,p2);
+                    info(t1.c_str());
+                    int y = atoi(t1.c_str());
+
+                    odebrane.lock();
+                    wyniki_zapytan.push_back(OdebranyWynikPolecenia(7,0,x,y));
                     odebrane.unlock();
                 }
             }
@@ -382,6 +451,11 @@ void Net::Odbieracz()
                 p2=temp.find(' ',p1);
                 t1=temp.substr(p1,p2);
                 info(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
                 int x = atoi(t1.c_str());
 
                 p1=temp.find(' ',p2)+1;
@@ -408,18 +482,47 @@ void Net::Odbieracz()
 
 
             }
-            else if (t1.substr(0,t1.size()-1).compare("WIN")==0)
+            else if (t1.substr(0,t1.size()).compare("WIN")==0)
             {
                 odebrane.lock();
                 wyniki_zapytan.push_back(OdebranyWynikPolecenia(100));
                 odebrane.unlock();
             }
-            else if (t1.substr(0,t1.size()-1).compare("LOSE")==0)
+            else if (t1.substr(0,t1.size()).compare("LOSE")==0)
             {
                 odebrane.lock();
                 wyniki_zapytan.push_back(OdebranyWynikPolecenia(101));
                 odebrane.unlock();
             }
+            /*else if (t1.substr(0,t1.size()).compare("PTS")==0)
+            {
+                size_t p2=0, p1=0;
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+                int x = atoi(t1.c_str());
+
+                p1=temp.find(' ',p2)+1;
+                p2=temp.find(' ',p1);
+                t1=temp.substr(p1,p2);
+                info(t1.c_str());
+                int y = atoi(t1.c_str());
+
+                odebrane.lock();
+                wyniki_zapytan.push_back(OdebranyWynikPolecenia(5,0,x,y));
+                odebrane.unlock();
+            }*/
             else if (t1.compare("NES")==0)
             {
                 list<Pozycja> pozycje;
